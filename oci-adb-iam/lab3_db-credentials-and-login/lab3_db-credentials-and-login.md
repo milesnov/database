@@ -49,7 +49,7 @@ This lab assumes you have:
     oci iam user create-db-credential --user-id $OCI_CS_USER_OCID --password Oracle123+Oracle123+ --description "DB password for your OCI account"
     ```
 
-4. Connect to database with IAM credentials as your OCI user. (needs adjustment)
+4. Connect to database with IAM credentials as your OCI user.
 
     ```
     sql /nolog <<EOF

@@ -42,7 +42,7 @@ This lab assumes you have:
 
 ## Task 2: Enable OCI IAM as the identity provider
 
-1. Connect to the database using the wallet file.
+1. Connect to the database using the wallet file. This step and the following steps will not run until the **EOF** statement at the end of step 4.
 
     ```
     sql /nolog <<EOF
@@ -64,7 +64,7 @@ This lab assumes you have:
     select name, value from v\$parameter where name ='identity_provider_type';
     ```
 
-4. Create the **user_shared** user and grant it permissions to create sessions. Create the **sr_dba_role** role and grant it permissions.
+4. Create the **user\_shared** user and grant it permissions to create sessions. Create the **sr\_dba\_role** role and grant it permissions. This command and all previous ones will run when this is entered into the Cloud Shell.
 
     ```
     create user user_shared identified globally as 'IAM_GROUP_NAME=All_DB_Users';
@@ -74,17 +74,24 @@ This lab assumes you have:
     EOF
     ```
 
-5. unzip your ADB wallet file.
+## Task 3: Unzip wallet file and edit contents
+
+1. unzip your ADB wallet file.
 
     ```
     unzip -d . lltest_wallet.zip
     ```
 
-6. Modify wallet files (need to ask Rich exactly what happens here)
+2. Create variable for location of wallet file.
+    >**Note:** If at any point you exit out of the cloud shell, these following commands may need to be ran again.
 
     ```
     export TNS_ADMIN=$HOME/adb_wallet
+    ```
 
+3. update tnsname.ora and sqlnet.ora files.
+
+    ```
     mv tnsnames.ora tnsnames.ora.orig
     mv sqlnet.ora sqlnet.ora.orig
 
@@ -92,7 +99,11 @@ This lab assumes you have:
     SSL_SERVER_DN_MATCH=yes" >> sqlnet.ora
 
     cat sqlnet.ora
+    ```
 
+4. Append TOKEN_AUTH.
+
+    ```
     head -1 tnsnames.ora.orig | sed -e 's/)))/)(TOKEN_AUTH=OCI_TOKEN)))/' > tnsnames.ora
 
     cat tnsnames.ora
